@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Candies xmlns="http://knu.ua/candy"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://knu.ua/candy ../xsd/candies.xsd">
+
+    <Candy id="c1">
+        <Name>Lacosta</Name>
+        <Energy>520</Energy>
+        <Type kind="chocolate" filled="true"/>
+        <Ingredients>
+            <Water>1500</Water>
+            <Sugar>42000</Sugar>
+            <Fructose>3000</Fructose>
+            <ChocolateType>dark</ChocolateType>
+            <Vanillin>120</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>5.20</Proteins>
+            <Fats>28.10</Fats>
+            <Carbohydrates>60.50</Carbohydrates>
+        </Value>
+        <Production>Roshen</Production>
+    </Candy>
+
+    <Candy id="c2">
+        <Name>Barbaris</Name>
+        <Energy>380</Energy>
+        <Type kind="caramel"/>
+        <Ingredients>
+            <Water>800</Water>
+            <Sugar>95000</Sugar>
+            <Fructose>1200</Fructose>
+            <Vanillin>0</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>0.00</Proteins>
+            <Fats>0.10</Fats>
+            <Carbohydrates>96.00</Carbohydrates>
+        </Value>
+        <Production>Roshen</Production>
+    </Candy>
+
+    <Candy id="c3">
+        <Name>Korivka</Name>
+        <Energy>410</Energy>
+        <Type kind="toffee"/>
+        <Ingredients>
+            <Water>6000</Water>
+            <Sugar>55000</Sugar>
+            <Fructose>500</Fructose>
+            <Vanillin>40</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>2.50</Proteins>
+            <Fats>8.00</Fats>
+            <Carbohydrates>80.00</Carbohydrates>
+        </Value>
+        <Production>Konti</Production>
+    </Candy>
+
+    <Candy id="c4">
+        <Name>Milk Bar</Name>
+        <Energy>545</Energy>
+        <Type kind="chocolate" filled="false"/>
+        <Ingredients>
+            <Water>900</Water>
+            <Sugar>50000</Sugar>
+            <Fructose>0</Fructose>
+            <ChocolateType>milk</ChocolateType>
+            <Vanillin>90</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>7.30</Proteins>
+            <Fats>31.00</Fats>
+            <Carbohydrates>56.00</Carbohydrates>
+        </Value>
+        <Production>Millennium</Production>
+    </Candy>
+
+    <Candy id="c5">
+        <Name>Duchess</Name>
+        <Energy>370</Energy>
+        <Type kind="caramel"/>
+        <Ingredients>
+            <Water>700</Water>
+            <Sugar>93000</Sugar>
+            <Fructose>2500</Fructose>
+            <Vanillin>10</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>0.10</Proteins>
+            <Fats>0.20</Fats>
+            <Carbohydrates>95.50</Carbohydrates>
+        </Value>
+        <Production>AVK</Production>
+    </Candy>
+
+    <Candy id="c6">
+        <Name>Toffee Classic</Name>
+        <Energy>430</Energy>
+        <Type kind="toffee"/>
+        <Ingredients>
+            <Water>5000</Water>
+            <Sugar>60000</Sugar>
+            <Fructose>800</Fructose>
+            <Vanillin>60</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>3.00</Proteins>
+            <Fats>10.50</Fats>
+            <Carbohydrates>78.00</Carbohydrates>
+        </Value>
+        <Production>AVK</Production>
+    </Candy>
+
+</Candies>
