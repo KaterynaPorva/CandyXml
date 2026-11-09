@@ -13,6 +13,7 @@ output/
 .idea/
 *.iml
 .vscode/
+.vs/
 .settings/
 .project
 .classpath
