@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Energy 950 exceeds maxInclusive 900 -->
+<Candies xmlns="http://knu.ua/candy">
+    <Candy id="c1">
+        <Name>Too Sweet</Name>
+        <Energy>950</Energy>
+        <Type kind="caramel"/>
+        <Ingredients>
+            <Water>100</Water>
+            <Sugar>90000</Sugar>
+            <Fructose>0</Fructose>
+            <Vanillin>0</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>0.00</Proteins>
+            <Fats>0.00</Fats>
+            <Carbohydrates>99.00</Carbohydrates>
+        </Value>
+        <Production>Test</Production>
+    </Candy>
+</Candies>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Well-formed, but <Color> is not part of the model -->
+<Candies xmlns="http://knu.ua/candy">
+    <Candy id="c1">
+        <Name>Colored</Name>
+        <Color>red</Color>
+        <Energy>400</Energy>
+        <Type kind="caramel"/>
+        <Ingredients>
+            <Water>100</Water>
+            <Sugar>90000</Sugar>
+            <Fructose>0</Fructose>
+            <Vanillin>0</Vanillin>
+        </Ingredients>
+        <Value>
+            <Proteins>0.00</Proteins>
+            <Fats>0.00</Fats>
+            <Carbohydrates>99.00</Carbohydrates>
+        </Value>
+        <Production>Test</Production>
+    </Candy>
+</Candies>
