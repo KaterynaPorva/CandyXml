@@ -22,10 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Тести XSL-перетворення. Результат перетворення читаємо як DOM-дерево і перевіряємо структуру.
 class CandyXslTransformerTest {
 
     private static Document grouped;
 
+    // Перетворення виконуємо один раз, далі всі тести дивляться на результат
     @BeforeAll
     static void transformOnce() throws Exception {
         CandyXslTransformer transformer = new CandyXslTransformer(Resources.source(Resources.XSL));
@@ -36,6 +38,7 @@ class CandyXslTransformerTest {
         grouped = factory.newDocumentBuilder().parse(new org.xml.sax.InputSource(new StringReader(xml)));
     }
 
+    // Дочірні елементи вузла (без текстових вузлів)
     private static List<Element> childElements(Node parent) {
         List<Element> result = new ArrayList<>();
         NodeList children = parent.getChildNodes();
@@ -56,6 +59,7 @@ class CandyXslTransformerTest {
 
     @Test
     void oneGroupPerKindSortedAlphabetically() {
+        // під коренем мають бути рівно три групи: caramel, chocolate, toffee
         List<String> groupNames = childElements(grouped.getDocumentElement()).stream()
                 .map(Element::getLocalName)
                 .toList();
@@ -66,6 +70,7 @@ class CandyXslTransformerTest {
 
     @Test
     void everyCandyLandsInTheGroupOfItsKind() {
+        // у кожній групі кожна цукерка має Type/@kind, що збігається з назвою групи
         int total = 0;
         for (Element group : childElements(grouped.getDocumentElement())) {
             List<Element> candies = childElements(group);
@@ -79,7 +84,7 @@ class CandyXslTransformerTest {
             }
             total += candies.size();
         }
-        assertEquals(TestData.CANDY_COUNT, total);
+        assertEquals(TestData.CANDY_COUNT, total);   // жодна цукерка не загубилась і не здублювалась
     }
 
     @Test
@@ -89,7 +94,7 @@ class CandyXslTransformerTest {
         for (int i = 0; i < candies.getLength(); i++) {
             Element candy = (Element) candies.item(i);
             ids.add(candy.getAttribute(XmlTag.ATTR_ID));
-            // each copied candy still has all six children
+            // у скопійованої цукерки залишились усі шість дочірніх елементів
             assertEquals(6, childElements(candy).size());
         }
         assertEquals(TestData.CANDY_COUNT, ids.size());

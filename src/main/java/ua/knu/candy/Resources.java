@@ -4,7 +4,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
 
-/** Locations of the bundled XML, XSD and XSL files, and a helper to open them from the classpath. */
+// Шляхи до XML, XSD, XSL усередині jar (тека src/main/resources) і допоміжні методи, щоб їх відкрити.
 public final class Resources {
 
     public static final String XML = "xml/candies.xml";
@@ -14,9 +14,7 @@ public final class Resources {
     private Resources() {
     }
 
-    /**
-     * @throws IllegalArgumentException when the resource does not exist on the classpath
-     */
+    // Відкриває ресурс як потік. Якщо файлу немає - одразу зрозуміла помилка, а не NullPointerException десь далі.
     public static InputStream open(String path) {
         InputStream in = Resources.class.getClassLoader().getResourceAsStream(path);
         if (in == null) {
@@ -25,7 +23,7 @@ public final class Resources {
         return in;
     }
 
-    /** Opens a resource as a JAXP {@link Source}. */
+    // Те саме, але у вигляді Source - так приймають дані валідатор і трансформер
     public static Source source(String path) {
         return new StreamSource(open(path));
     }

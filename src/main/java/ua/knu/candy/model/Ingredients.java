@@ -2,11 +2,8 @@ package ua.knu.candy.model;
 
 import java.util.Optional;
 
-/**
- * {@code <Ingredients>} element. All amounts are in milligrams per 100 g.
- *
- * @param chocolateType present only for chocolate candies, otherwise {@code null}
- */
+// Елемент <Ingredients>. Усі кількості в міліграмах на 100 г.
+// chocolateType є лише у шоколадних цукерок, для інших він null.
 public record Ingredients(int water, int sugar, int fructose, ChocolateKind chocolateType, int vanillin) {
 
     public Ingredients {
@@ -16,7 +13,7 @@ public record Ingredients(int water, int sugar, int fructose, ChocolateKind choc
         requireNonNegative(vanillin, "vanillin");
     }
 
-    /** @return the chocolate kind, empty for non-chocolate candies. */
+    // Зручний доступ до виду шоколаду без перевірки на null
     public Optional<ChocolateKind> chocolate() {
         return Optional.ofNullable(chocolateType);
     }

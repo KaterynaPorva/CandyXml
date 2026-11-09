@@ -3,7 +3,8 @@ package ua.knu.candy.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** {@code <Value>} element: nutrition value in grams per 100 g. */
+// Елемент <Value>: харчова цінність у грамах на 100 г.
+// BigDecimal, а не double, щоб 5.20 зберігалося точно, як у XML.
 public record NutritionValue(BigDecimal proteins, BigDecimal fats, BigDecimal carbohydrates) {
 
     public NutritionValue {

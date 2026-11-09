@@ -2,13 +2,12 @@ package ua.knu.candy.parser;
 
 import java.util.Locale;
 
-/** The three parsing technologies required by the task, and a factory for each. */
+// Три парсери, які вимагає завдання. Заодно це фабрика: createParser() створює потрібний.
 public enum ParserType {
     SAX,
     DOM,
     STAX;
 
-    /** @return a fresh parser of this type. */
     public CandyParser createParser() {
         return switch (this) {
             case SAX -> new SaxCandyParser();
@@ -17,11 +16,7 @@ public enum ParserType {
         };
     }
 
-    /**
-     * Parses a command-line value such as {@code sax}, {@code Dom}, {@code STAX}.
-     *
-     * @throws IllegalArgumentException for an unknown value
-     */
+    // "sax" / "Dom" / "STAX" з командного рядка -> константа
     public static ParserType fromString(String value) {
         try {
             return valueOf(value.trim().toUpperCase(Locale.ROOT));

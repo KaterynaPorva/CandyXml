@@ -2,15 +2,12 @@ package ua.knu.candy.validation;
 
 import java.util.List;
 
-/**
- * Outcome of validating an XML document against the XSD.
- *
- * @param errors human-readable messages, empty when the document is valid
- */
+// Результат валідації: список повідомлень про помилки.
+// Порожній список = документ валідний.
 public record ValidationResult(List<String> errors) {
 
     public ValidationResult {
-        errors = List.copyOf(errors);
+        errors = List.copyOf(errors);   // незмінна копія, щоб ззовні список не змінили
     }
 
     public boolean isValid() {

@@ -3,24 +3,25 @@ package ua.knu.candy.model;
 import java.util.Comparator;
 import java.util.Locale;
 
-/**
- * Ready-made {@link Comparator}s for sorting candies.
- * Implemented as an enum so that a sort order can be selected by name from the command line.
- */
+// Варіанти сортування цукерок (пункт завдання про інтерфейс Comparator).
+// Зроблено як enum, який сам реалізує Comparator<Candy>:
+//   - кожна константа - окремий готовий компаратор,
+//   - за назвою константи його можна вибрати з командного рядка (fromString).
 public enum CandyComparator implements Comparator<Candy> {
 
-    /** Alphabetically by name, case-insensitive. */
+    // За назвою, без урахування регістру
     BY_NAME(Comparator.comparing(Candy::name, String.CASE_INSENSITIVE_ORDER)),
 
-    /** By energy value, lowest first. */
+    // За калорійністю, від меншої до більшої
     BY_ENERGY(Comparator.comparingInt(Candy::energy)),
 
-    /** By manufacturer, then by name. */
+    // За виробником, а всередині одного виробника - за назвою
     BY_PRODUCTION(Comparator.comparing(Candy::production).thenComparing(BY_NAME)),
 
-    /** By sugar amount, highest first. */
+    // За кількістю цукру, від більшої до меншої
     BY_SUGAR_DESC(Comparator.comparingInt((Candy c) -> c.ingredients().sugar()).reversed());
 
+    // Справжній компаратор, якому делегуємо порівняння
     private final Comparator<Candy> delegate;
 
     CandyComparator(Comparator<Candy> delegate) {
@@ -32,11 +33,7 @@ public enum CandyComparator implements Comparator<Candy> {
         return delegate.compare(left, right);
     }
 
-    /**
-     * Parses a command-line value such as {@code name}, {@code energy}, {@code by_energy}.
-     *
-     * @throws IllegalArgumentException for an unknown value
-     */
+    // "name" -> BY_NAME, "energy" -> BY_ENERGY, "by_sugar_desc" -> BY_SUGAR_DESC
     public static CandyComparator fromString(String value) {
         String normalized = value.trim().toUpperCase(Locale.ROOT);
         if (!normalized.startsWith("BY_")) {

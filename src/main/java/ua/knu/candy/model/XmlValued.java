@@ -1,19 +1,15 @@
 package ua.knu.candy.model;
 
-/**
- * An enum constant that has a textual representation in the XML document.
- * Shared lookup logic lives here so that every enum does not repeat it.
- */
+// Спільний інтерфейс для переліків (enum), які записуються в XML текстом.
+// Наприклад, Kind.CHOCOLATE в XML виглядає як "chocolate".
+// Метод fromXml один для всіх переліків, щоб не писати однаковий пошук у кожному enum.
 public interface XmlValued {
 
-    /** @return the value exactly as it appears in XML (e.g. {@code "chocolate"}). */
+    // Як значення записано в XML
     String xmlValue();
 
-    /**
-     * Finds the enum constant whose {@link #xmlValue()} equals {@code value}.
-     *
-     * @throws IllegalArgumentException when no constant matches
-     */
+    // Шукає константу переліку за її XML-значенням.
+    // Якщо такого значення немає - кидає виняток з підказкою, що саме не знайшли.
     static <E extends Enum<E> & XmlValued> E fromXml(Class<E> type, String value) {
         for (E constant : type.getEnumConstants()) {
             if (constant.xmlValue().equals(value)) {

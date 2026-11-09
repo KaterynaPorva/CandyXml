@@ -5,10 +5,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Every element name of the Candy XML document, plus its attribute names.
- * Single source of truth shared by the SAX, DOM and StAX parsers.
- */
+// Усі назви елементів XML-документа в одному місці (плюс назви атрибутів).
+// Навіщо: три парсери працюють з тими самими тегами. Якби кожен писав "Energy", "Sugar"
+// рядками, одна одруківка зламала б лише один парсер і її було б важко знайти.
+// leaf = true означає "листок": елемент містить текст і не має дочірніх елементів (<Name>Lacosta</Name>).
 public enum XmlTag {
     CANDIES("Candies", false),
     CANDY("Candy", false),
@@ -27,12 +27,15 @@ public enum XmlTag {
     CARBOHYDRATES("Carbohydrates", true),
     PRODUCTION("Production", true);
 
+    // Простір імен документа (той самий, що targetNamespace у XSD)
     public static final String NAMESPACE = "http://knu.ua/candy";
 
+    // Назви атрибутів
     public static final String ATTR_ID = "id";
     public static final String ATTR_KIND = "kind";
     public static final String ATTR_FILLED = "filled";
 
+    // Словник "назва тегу -> константа", щоб fromName працював швидко
     private static final Map<String, XmlTag> BY_NAME = Stream.of(values())
             .collect(Collectors.toUnmodifiableMap(XmlTag::xmlName, Function.identity()));
 
@@ -44,19 +47,15 @@ public enum XmlTag {
         this.leaf = leaf;
     }
 
-    /** @return the element name as written in XML. */
     public String xmlName() {
         return xmlName;
     }
 
-    /** @return {@code true} when the element carries a text value and no child elements. */
     public boolean isLeaf() {
         return leaf;
     }
 
-    /**
-     * @throws IllegalArgumentException for an element that is not part of the schema
-     */
+    // "Energy" -> ENERGY. Невідомий тег = помилка, бо такого елемента немає у схемі.
     public static XmlTag fromName(String localName) {
         XmlTag tag = BY_NAME.get(localName);
         if (tag == null) {

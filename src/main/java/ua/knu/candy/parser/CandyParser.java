@@ -8,20 +8,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/** Reads a Candy XML document into a list of {@link Candy} objects. */
+// Інтерфейс парсера: "дай потік з XML - отримай список цукерок".
+// Три реалізації: SaxCandyParser, DomCandyParser, StaxCandyParser.
+// Завдяки інтерфейсу решта програми не знає, який саме парсер працює.
 public interface CandyParser {
 
-    /** @return which technology this parser is built on. */
     ParserType type();
 
-    /**
-     * Parses the document from a stream. The stream is not closed.
-     *
-     * @throws CandyParseException when the XML is malformed or does not match the model
-     */
+    // Основний метод. Потік не закриває - це справа того, хто його відкрив.
     List<Candy> parse(InputStream in) throws CandyParseException;
 
-    /** Convenience overload for files. */
+    // Зручний варіант для файлу: відкриває потік, парсить, закриває
     default List<Candy> parse(Path file) throws CandyParseException {
         try (InputStream in = Files.newInputStream(file)) {
             return parse(in);

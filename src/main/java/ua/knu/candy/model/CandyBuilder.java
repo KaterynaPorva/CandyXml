@@ -2,10 +2,10 @@ package ua.knu.candy.model;
 
 import java.math.BigDecimal;
 
-/**
- * Mutable builder for {@link Candy}. XML parsers fill it field by field as they
- * encounter elements, then call {@link #build()} once the closing {@code </Candy>} is reached.
- */
+// Будівельник (патерн Builder) для Candy.
+// Навіщо: Candy незмінний і створюється одразу з усіма полями, а парсер читає XML
+// поступово - спочатку <Name>, потім <Energy> і т.д. Тому парсер складає поля сюди,
+// а коли дійшов до </Candy>, викликає build() і отримує готовий об'єкт.
 public final class CandyBuilder {
 
     private String id;
@@ -22,6 +22,8 @@ public final class CandyBuilder {
     private BigDecimal fats;
     private BigDecimal carbohydrates;
     private String production;
+
+    // Кожен сеттер повертає this, щоб можна було писати ланцюжком: builder.id("c1").name("...")
 
     public CandyBuilder id(String id) {
         this.id = id;
@@ -93,10 +95,8 @@ public final class CandyBuilder {
         return this;
     }
 
-    /**
-     * @return the assembled candy
-     * @throws IllegalStateException if a required field was never set
-     */
+    // Збирає Candy. Якщо якогось обов'язкового поля в XML не було -
+    // кидає IllegalStateException з назвою поля (chocolateType необов'язковий).
     public Candy build() {
         return new Candy(
                 required(id, "id"),

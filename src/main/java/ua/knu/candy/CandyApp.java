@@ -20,14 +20,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Entry point. Validates the bundled XML against the XSD, parses it with the chosen parser,
- * sorts the candies with the chosen comparator and writes the XSL-grouped document.
- *
- * <pre>
- *   java -jar candy-xml.jar [sax|dom|stax] [name|energy|production|sugar_desc] [outputDir]
- * </pre>
- */
+// Точка входу в програму. Весь сценарій за завданням у методі run():
+//   1. валідація XML за XSD
+//   2. парсинг обраним парсером (SAX / DOM / StAX)
+//   3. сортування через Comparator
+//   4. XSL-перетворення у згрупований документ
+//
+// Запуск:  java -jar candy-xml.jar [sax|dom|stax] [name|energy|production|sugar_desc] [тека для результату]
+// Усі аргументи необов'язкові.
 public final class CandyApp {
 
     private static final Logger log = LoggerFactory.getLogger(CandyApp.class);
@@ -36,6 +36,7 @@ public final class CandyApp {
 
     public static void main(String[] args) {
         try {
+            // Розбираємо аргументи командного рядка, для відсутніх беремо значення за замовчуванням
             ParserType parserType = args.length > 0 ? ParserType.fromString(args[0]) : ParserType.SAX;
             CandyComparator order = args.length > 1 ? CandyComparator.fromString(args[1]) : CandyComparator.BY_NAME;
             Path outputDir = args.length > 2 ? Path.of(args[2]) : Path.of("output");
@@ -51,18 +52,13 @@ public final class CandyApp {
         }
     }
 
-    /**
-     * Runs the full pipeline.
-     *
-     * @return the parsed candies, sorted with {@code order}
-     * @throws IllegalStateException when the XML does not pass XSD validation
-     */
+    // Повертає відсортований список - це зручно для тестів
     public List<Candy> run(ParserType parserType, CandyComparator order, Path outputDir)
             throws SAXException, IOException, CandyParseException, TransformerException {
 
         log.info("Parser: {}, sort order: {}, output: {}", parserType, order, outputDir.toAbsolutePath());
 
-        // 1. Validate
+        // 1. Валідація. Якщо документ не відповідає схемі - далі нема сенсу йти.
         XsdValidator validator = new XsdValidator(Resources.source(Resources.XSD));
         ValidationResult validation = validator.validate(Resources.source(Resources.XML));
         if (!validation.isValid()) {
@@ -70,20 +66,20 @@ public final class CandyApp {
             throw new IllegalStateException("XML document failed XSD validation");
         }
 
-        // 2. Parse
+        // 2. Парсинг. Який саме парсер - вирішує ParserType, тут це не важливо.
         List<Candy> candies;
         try (InputStream in = Resources.open(Resources.XML)) {
             candies = parserType.createParser().parse(in);
         }
 
-        // 3. Sort
+        // 3. Сортування обраним компаратором і вивід у лог
         List<Candy> sorted = new ArrayList<>(candies);
         sorted.sort(order);
         log.info("Candies sorted {}:", order);
         sorted.forEach(candy -> log.info("  {} | {} | {} kcal | {} | {}",
                 candy.id(), candy.name(), candy.energy(), candy.type().kind().xmlValue(), candy.production()));
 
-        // 4. Transform
+        // 4. XSL: записуємо згрупований документ у output/candies-grouped.xml
         Files.createDirectories(outputDir);
         Path grouped = outputDir.resolve(GROUPED_FILE_NAME);
         CandyXslTransformer transformer = new CandyXslTransformer(Resources.source(Resources.XSL));

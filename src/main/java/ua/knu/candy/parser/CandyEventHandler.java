@@ -8,25 +8,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * Parser-agnostic state machine for event-driven parsing.
- * Both SAX ({@link SaxCandyParser}) and StAX ({@link StaxCandyParser}) produce the same three
- * kinds of events - element start, text, element end - so the logic of turning them into
- * {@link Candy} objects is written once here.
- */
+// Спільна логіка для подієвих парсерів (SAX і StAX).
+// Обидва видають три види подій: "елемент відкрився", "текст", "елемент закрився".
+// Різниця лише в тому, ХТО викликає: у SAX парсер сам викликає наші методи,
+// у StAX ми в циклі питаємо наступну подію. А ЩО робити з подією - однаково,
+// тому написано тут один раз.
+//
+// Як працює:
+//   <Candy id="c1">  -> створюємо новий CandyBuilder, записуємо id
+//   <Name>Lacosta    -> накопичуємо текст у StringBuilder
+//   </Name>          -> текст готовий, кладемо його в builder через CandyFieldMapper
+//   </Candy>         -> builder.build(), додаємо цукерку в список
 final class CandyEventHandler {
 
     private final List<Candy> candies = new ArrayList<>();
     private final StringBuilder text = new StringBuilder();
-    private CandyBuilder current;
+    private CandyBuilder current;   // цукерка, яку зараз читаємо (null між цукерками)
 
-    /**
-     * @param localName element name without namespace prefix
-     * @param attribute returns an attribute value by name, or {@code null} when absent
-     */
     void startElement(String localName, Function<String, String> attribute) {
         XmlTag tag = XmlTag.fromName(localName);
-        text.setLength(0);
+        text.setLength(0);  // очищаємо накопичений текст
         if (tag == XmlTag.CANDY) {
             current = new CandyBuilder();
         }
@@ -35,6 +36,7 @@ final class CandyEventHandler {
         }
     }
 
+    // Текст може прийти частинами, тому саме накопичуємо, а не присвоюємо
     void characters(char[] chars, int start, int length) {
         text.append(chars, start, length);
     }

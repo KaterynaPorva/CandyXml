@@ -15,17 +15,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
-/** Applies one compiled XSL stylesheet to XML documents. */
+// XSL-перетворення (пункт 5 завдання).
+// Сам алгоритм групування описаний у файлі group-by-kind.xsl, а цей клас лише його запускає:
+//   1. TransformerFactory компілює .xsl у Templates (один раз, у конструкторі).
+//   2. transform(xml, out) застосовує його до документа і пише результат.
 public final class CandyXslTransformer {
 
     private static final Logger log = LoggerFactory.getLogger(CandyXslTransformer.class);
 
     private final Templates templates;
 
-    /**
-     * @param xsl the stylesheet
-     * @throws TransformerConfigurationException when the stylesheet cannot be compiled
-     */
     public CandyXslTransformer(Source xsl) throws TransformerConfigurationException {
         TransformerFactory factory = TransformerFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -33,7 +32,7 @@ public final class CandyXslTransformer {
         log.debug("XSL stylesheet compiled");
     }
 
-    /** Transforms {@code xml} and writes the result to {@code out}. */
+    // Результат може бути файл, рядок, потік - будь-який Result
     public void transform(Source xml, Result out) throws TransformerException {
         Transformer transformer = templates.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -42,7 +41,7 @@ public final class CandyXslTransformer {
         log.info("XSL transformation finished");
     }
 
-    /** Convenience: transforms to a string. */
+    // Зручний варіант для тестів: результат як рядок
     public String transformToString(Source xml) throws TransformerException {
         StringWriter writer = new StringWriter();
         transform(xml, new StreamResult(writer));

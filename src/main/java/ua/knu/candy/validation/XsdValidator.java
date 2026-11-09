@@ -15,31 +15,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Validates XML documents against one compiled XSD schema.
- * All schema violations are collected (not only the first one) and returned as a {@link ValidationResult}.
- */
+// Перевірка XML-документа на відповідність XSD-схемі (пункт 4 завдання).
+// Як працює:
+//   1. SchemaFactory читає файл .xsd і компілює його в об'єкт Schema (один раз, у конструкторі).
+//   2. Для кожного документа Schema.newValidator().validate(xml).
+//   3. Стандартна поведінка - кинути виняток на першій помилці. Ми підставляємо свій ErrorHandler,
+//      який збирає ВСІ помилки в список, щоб побачити їх одразу.
 public final class XsdValidator {
 
     private static final Logger log = LoggerFactory.getLogger(XsdValidator.class);
 
     private final Schema schema;
 
-    /**
-     * @param xsd the schema document
-     * @throws SAXException when the schema itself is invalid
-     */
     public XsdValidator(Source xsd) throws SAXException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        this.schema = factory.newSchema(xsd);
+        this.schema = factory.newSchema(xsd);   // тут же впаде SAXException, якщо сама схема зламана
         log.debug("XSD schema compiled");
     }
 
-    /**
-     * @param xml the document to check
-     * @throws IOException when the document cannot be read
-     */
     public ValidationResult validate(Source xml) throws IOException {
         ErrorCollector errors = new ErrorCollector();
         Validator validator = schema.newValidator();
@@ -47,8 +41,8 @@ public final class XsdValidator {
         try {
             validator.validate(xml);
         } catch (SAXException e) {
-            // fatal (well-formedness) error - the handler has already recorded it,
-            // unless the parser bypassed the handler
+            // Сюди потрапляємо лише при фатальній помилці (XML навіть не well-formed).
+            // Зазвичай ErrorCollector уже записав повідомлення; якщо ні - додаємо вручну.
             if (errors.messages.isEmpty()) {
                 errors.messages.add(e.getMessage());
             }
@@ -63,7 +57,7 @@ public final class XsdValidator {
         return result;
     }
 
-    /** Records every error instead of stopping at the first. */
+    // Збирач помилок. Validator викликає ці методи замість того, щоб кидати виняток.
     private static final class ErrorCollector implements ErrorHandler {
 
         private final List<String> messages = new ArrayList<>();
@@ -73,15 +67,17 @@ public final class XsdValidator {
             log.warn("XSD warning at {}: {}", location(e), e.getMessage());
         }
 
+        // Звичайна помилка схеми (вихід за межі, невідомий елемент...) - записали і йдемо далі
         @Override
         public void error(SAXParseException e) {
             messages.add(format(e));
         }
 
+        // Фатальна (зламаний XML) - записали, але далі читати неможливо, тому кидаємо
         @Override
         public void fatalError(SAXParseException e) throws SAXException {
             messages.add(format(e));
-            throw e; // per ErrorHandler contract, parsing cannot continue
+            throw e;
         }
 
         private static String format(SAXParseException e) {

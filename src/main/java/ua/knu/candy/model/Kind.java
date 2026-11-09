@@ -1,6 +1,7 @@
 package ua.knu.candy.model;
 
-/** Kind of candy. Mirrors {@code KindType} in the XSD. */
+// Тип цукерки: карамель, ірис, шоколадна.
+// Відповідає переліку KindType у XSD (атрибут kind елемента Type).
 public enum Kind implements XmlValued {
     CARAMEL("caramel"),
     TOFFEE("toffee"),

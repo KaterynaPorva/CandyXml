@@ -2,17 +2,16 @@ package ua.knu.candy.model;
 
 import java.util.Objects;
 
-/**
- * One {@code <Candy>} element of the document. Immutable; build it with {@link CandyBuilder}.
- *
- * @param id         unique identifier, the {@code id} attribute (XSD type ID)
- * @param name       candy name
- * @param energy     energy value in kcal per 100 g
- * @param type       kind of candy and filling flag
- * @param ingredients ingredient amounts
- * @param value      nutrition value
- * @param production manufacturer
- */
+// Головний клас моделі - одна цукерка, тобто один елемент <Candy> з XML.
+// Поля повторюють структуру XML:
+//   id          - атрибут id (у XSD це тип ID, має бути унікальним)
+//   name        - <Name>
+//   energy      - <Energy>, ккал
+//   type        - <Type kind filled>
+//   ingredients - <Ingredients>
+//   value       - <Value>
+//   production  - <Production>, виробник
+// Об'єкт незмінний, тому збирається через CandyBuilder.
 public record Candy(
         String id,
         String name,
@@ -22,6 +21,7 @@ public record Candy(
         NutritionValue value,
         String production) {
 
+    // Перевірки, щоб не можна було створити "поламану" цукерку
     public Candy {
         Objects.requireNonNull(id, "id");
         Objects.requireNonNull(name, "name");

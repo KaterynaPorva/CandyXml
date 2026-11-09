@@ -19,9 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** One test class exercises all three parsers: they must behave identically. */
+// Тести парсерів. Один клас для всіх трьох: @EnumSource(ParserType.class) запускає
+// кожен тест по черзі для SAX, DOM і StAX. Так гарантуємо, що вони поводяться однаково.
 class CandyParserTest {
 
+    // Відкрити ресурс і розпарсити його обраним парсером
     private static List<Candy> parse(ParserType type, String resource) throws CandyParseException {
         try (InputStream in = Resources.open(resource)) {
             return type.createParser().parse(in);
@@ -45,6 +47,7 @@ class CandyParserTest {
         assertEquals(TestData.ALL_IDS, candies.stream().map(Candy::id).toList());
     }
 
+    // Порівнюємо цілий об'єкт з очікуваним - перевіряються всі поля одразу (record має equals)
     @ParameterizedTest
     @EnumSource(ParserType.class)
     void readsAllFieldsOfChocolateCandy(ParserType type) throws CandyParseException {
@@ -54,6 +57,7 @@ class CandyParserTest {
     @ParameterizedTest
     @EnumSource(ParserType.class)
     void handlesOptionalElementAndDefaultAttribute(ParserType type) throws CandyParseException {
+        // карамель: немає ChocolateType і немає filled
         assertEquals(TestData.BARBARIS, parse(type, Resources.XML).get(1));
     }
 
@@ -66,6 +70,8 @@ class CandyParserTest {
         assertEquals(sax, dom);
         assertEquals(sax, stax);
     }
+
+    // Далі - негативні тести на "зламаних" документах
 
     @ParameterizedTest
     @EnumSource(ParserType.class)
@@ -96,6 +102,7 @@ class CandyParserTest {
         assertTrue(e.getMessage().contains("kind"), e.getMessage());
     }
 
+    // @TempDir - JUnit створює тимчасову теку і сам її видаляє після тесту
     @ParameterizedTest
     @EnumSource(ParserType.class)
     void parsesFromFilePath(ParserType type, @TempDir Path dir) throws Exception {

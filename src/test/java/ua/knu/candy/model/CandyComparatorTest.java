@@ -11,8 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.knu.candy.TestData.candy;
 
+// Тести сортування: три цукерки, для кожного компаратора перевіряємо очікуваний порядок
 class CandyComparatorTest {
 
+    //                                id    name     kcal  sugar  виробник
     private static final Candy ZEBRA = candy("c1", "zebra", 300, 500, "Konti");
     private static final Candy APPLE = candy("c2", "Apple", 500, 900, "Roshen");
     private static final Candy MANGO = candy("c3", "mango", 400, 700, "Konti");
@@ -25,6 +27,7 @@ class CandyComparatorTest {
 
     @Test
     void byNameIsCaseInsensitive() {
+        // "Apple" з великої, але все одно перша
         assertEquals(List.of(APPLE, MANGO, ZEBRA), sorted(CandyComparator.BY_NAME));
     }
 
@@ -35,6 +38,7 @@ class CandyComparatorTest {
 
     @Test
     void byProductionThenByName() {
+        // Konti (mango, zebra), потім Roshen (Apple)
         assertEquals(List.of(MANGO, ZEBRA, APPLE), sorted(CandyComparator.BY_PRODUCTION));
     }
 
@@ -43,6 +47,7 @@ class CandyComparatorTest {
         assertEquals(List.of(APPLE, MANGO, ZEBRA), sorted(CandyComparator.BY_SUGAR_DESC));
     }
 
+    // Базова властивість будь-якого Comparator: compare(a,a)=0 і compare(a,b) = -compare(b,a)
     @ParameterizedTest
     @EnumSource(CandyComparator.class)
     void comparatorIsConsistentWithItself(CandyComparator comparator) {

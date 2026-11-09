@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Quieter logging while running unit tests: console only, WARN and above -->
+<!-- Налаштування логера для тестів: лише консоль і лише WARN та вище, щоб тести не шуміли.
+     Logback автоматично бере logback-test.xml замість logback.xml, якщо він є на classpath. -->
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

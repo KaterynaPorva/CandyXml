@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Тест усього сценарію CandyApp.run() від початку до кінця (валідація -> парсинг -> сортування -> XSL)
 class CandyAppTest {
 
     @ParameterizedTest
@@ -23,11 +24,13 @@ class CandyAppTest {
     void pipelineRunsEndToEndWithEveryParser(ParserType type, @TempDir Path out) throws Exception {
         List<Candy> result = new CandyApp().run(type, CandyComparator.BY_ENERGY, out);
 
+        // 6 цукерок, відсортовані за калорійністю
         assertEquals(TestData.CANDY_COUNT, result.size());
         for (int i = 1; i < result.size(); i++) {
             assertTrue(result.get(i - 1).energy() <= result.get(i).energy(), "not sorted by energy");
         }
 
+        // файл з результатом XSL створений і містить три групи
         Path grouped = out.resolve(CandyApp.GROUPED_FILE_NAME);
         assertTrue(Files.exists(grouped));
         String xml = Files.readString(grouped);

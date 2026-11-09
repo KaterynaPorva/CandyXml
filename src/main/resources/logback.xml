@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Налаштування логера (пункт 9 завдання).
+    У коді використовується SLF4J (інтерфейс), Logback - його реалізація, яка читає цей файл.
+    Два виводи (appender): консоль і файл logs/candy.log.
+-->
 <configuration>
 
     <property name="LOG_DIR" value="logs"/>
 
-    <!-- Console: short, human-readable -->
+    <!-- Консоль: коротко, щоб було зручно читати під час запуску -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %logger{20} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- File: full timestamps, rolled daily, kept for 7 days -->
+    <!-- Файл: повна дата, назва потоку; новий файл щодня, зберігаємо 7 днів -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/candy.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -22,7 +27,7 @@
         </encoder>
     </appender>
 
-    <!-- Application code: DEBUG goes to file, INFO and above to console -->
+    <!-- Для нашого пакета пишемо все від DEBUG, для бібліотек - від INFO -->
     <logger name="ua.knu.candy" level="DEBUG"/>
 
     <root level="INFO">

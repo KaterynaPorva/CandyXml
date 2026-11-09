@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    XSD-схема для candies.xml.
+    targetNamespace - простір імен документа, elementFormDefault="qualified" означає,
+    що всі елементи документа належать до цього простору імен.
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://knu.ua/candy"
            targetNamespace="http://knu.ua/candy"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-    <!-- ====================== Simple types ====================== -->
+    <!-- ====================== Прості типи ====================== -->
+    <!-- Простий тип = обмеження (restriction) на вбудований тип: перелік, межі, шаблон, довжина -->
 
-    <!-- ID type with a pattern: c1, c2, ... Uniqueness is guaranteed by xs:ID -->
+    <!-- Ідентифікатор цукерки. Базовий тип xs:ID гарантує унікальність у документі,
+         pattern вимагає вигляд c1, c2, c10... -->
     <xs:simpleType name="CandyIdType">
         <xs:restriction base="xs:ID">
             <xs:pattern value="c[0-9]+"/>
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- Непорожній рядок до 100 символів (для назви і виробника) -->
     <xs:simpleType name="NonEmptyStringType">
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
@@ -21,7 +29,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Energy in kcal per 100 g; boundary values -->
+    <!-- Калорійність, ккал на 100 г. Граничні значення 0..900 -->
     <xs:simpleType name="EnergyType">
         <xs:restriction base="xs:int">
             <xs:minInclusive value="0"/>
@@ -29,7 +37,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Enumeration of candy kinds -->
+    <!-- Перелік: тип цукерки -->
     <xs:simpleType name="KindType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="caramel"/>
@@ -38,7 +46,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Enumeration of chocolate kinds -->
+    <!-- Перелік: вид шоколаду -->
     <xs:simpleType name="ChocolateKindType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="dark"/>
@@ -47,7 +55,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Milligrams per 100 g -->
+    <!-- Міліграми на 100 г, 0..100000 -->
     <xs:simpleType name="MilligramsType">
         <xs:restriction base="xs:int">
             <xs:minInclusive value="0"/>
@@ -55,7 +63,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Grams per 100 g, two decimals -->
+    <!-- Грами на 100 г, 0..100, не більше двох знаків після коми -->
     <xs:simpleType name="GramsType">
         <xs:restriction base="xs:decimal">
             <xs:minInclusive value="0"/>
@@ -64,14 +72,18 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- ====================== Complex types ====================== -->
+    <!-- ====================== Комплексні типи ====================== -->
+    <!-- Комплексний тип = елемент з дочірніми елементами та/або атрибутами -->
 
-    <!-- Type: kind of candy + whether it has a filling -->
+    <!-- <Type kind="chocolate" filled="true"/> - лише атрибути, без вмісту.
+         kind обов'язковий (use="required"), filled необов'язковий зі значенням за замовчуванням false -->
     <xs:complexType name="TypeType">
         <xs:attribute name="kind" type="KindType" use="required"/>
         <xs:attribute name="filled" type="xs:boolean" use="optional" default="false"/>
     </xs:complexType>
 
+    <!-- <Ingredients> - послідовність (sequence) елементів у заданому порядку.
+         ChocolateType необов'язковий (minOccurs="0") - лише для шоколадних -->
     <xs:complexType name="IngredientsType">
         <xs:sequence>
             <xs:element name="Water" type="MilligramsType"/>
@@ -82,6 +94,7 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- <Value> - харчова цінність -->
     <xs:complexType name="ValueType">
         <xs:sequence>
             <xs:element name="Proteins" type="GramsType"/>
@@ -90,6 +103,7 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- <Candy id="c1"> - одна цукерка: шість дочірніх елементів + обов'язковий атрибут id -->
     <xs:complexType name="CandyType">
         <xs:sequence>
             <xs:element name="Name" type="NonEmptyStringType"/>
@@ -102,13 +116,14 @@
         <xs:attribute name="id" type="CandyIdType" use="required"/>
     </xs:complexType>
 
+    <!-- <Candies> - список цукерок, щонайменше одна -->
     <xs:complexType name="CandiesType">
         <xs:sequence>
             <xs:element name="Candy" type="CandyType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <!-- ====================== Root element ====================== -->
+    <!-- ====================== Кореневий елемент ====================== -->
     <xs:element name="Candies" type="CandiesType"/>
 
 </xs:schema>

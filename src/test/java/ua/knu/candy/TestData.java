@@ -10,20 +10,22 @@ import ua.knu.candy.model.NutritionValue;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** Expected objects and test-resource paths shared by all test classes. */
+// Спільні дані для всіх тестів: шляхи до "зламаних" XML-файлів і очікувані об'єкти,
+// зібрані вручну з тих самих значень, що в candies.xml.
 public final class TestData {
 
-    public static final String INVALID_ENERGY = "xml/invalid-energy.xml";
-    public static final String INVALID_DUPLICATE_ID = "xml/invalid-duplicate-id.xml";
-    public static final String INVALID_MISSING_KIND = "xml/invalid-missing-kind.xml";
-    public static final String UNKNOWN_ELEMENT = "xml/unknown-element.xml";
-    public static final String MISSING_FIELD = "xml/missing-field.xml";
-    public static final String MALFORMED = "xml/malformed.xml";
+    // Тестові документи з src/test/resources/xml
+    public static final String INVALID_ENERGY = "xml/invalid-energy.xml";           // Energy = 950, більше за максимум 900
+    public static final String INVALID_DUPLICATE_ID = "xml/invalid-duplicate-id.xml"; // два елементи з id="c1"
+    public static final String INVALID_MISSING_KIND = "xml/invalid-missing-kind.xml"; // <Type> без атрибута kind
+    public static final String UNKNOWN_ELEMENT = "xml/unknown-element.xml";         // зайвий елемент <Color>
+    public static final String MISSING_FIELD = "xml/missing-field.xml";             // немає <Production>
+    public static final String MALFORMED = "xml/malformed.xml";                     // незакритий тег
 
-    /** Number of candies in the bundled {@code candies.xml}. */
+    // Скільки цукерок у candies.xml
     public static final int CANDY_COUNT = 6;
 
-    /** The first candy of {@code candies.xml}, built by hand. */
+    // Перша цукерка з candies.xml - шоколадна з начинкою, має ChocolateType
     public static final Candy LACOSTA = new Candy(
             "c1",
             "Lacosta",
@@ -33,7 +35,7 @@ public final class TestData {
             new NutritionValue(new BigDecimal("5.20"), new BigDecimal("28.10"), new BigDecimal("60.50")),
             "Roshen");
 
-    /** The second candy of {@code candies.xml}: caramel, no chocolate type, no filled attribute. */
+    // Друга цукерка - карамель: без ChocolateType і без атрибута filled (має стати false)
     public static final Candy BARBARIS = new Candy(
             "c2",
             "Barbaris",
@@ -48,7 +50,7 @@ public final class TestData {
     private TestData() {
     }
 
-    /** A small candy for comparator tests. */
+    // Маленька цукерка для тестів сортування: задаємо лише те, що впливає на порядок
     public static Candy candy(String id, String name, int energy, int sugar, String production) {
         return new Candy(
                 id, name, energy,

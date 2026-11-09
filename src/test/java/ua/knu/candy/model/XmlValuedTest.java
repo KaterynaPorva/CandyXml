@@ -9,11 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Тести переліків Kind і ChocolateKind та спільного пошуку XmlValued.fromXml
 class XmlValuedTest {
 
+    // @EnumSource запускає тест окремо для кожної константи переліку
     @ParameterizedTest
     @EnumSource(Kind.class)
     void kindRoundTripsThroughXmlValue(Kind kind) {
+        // константа -> XML-значення -> та сама константа
         assertSame(kind, XmlValued.fromXml(Kind.class, kind.xmlValue()));
     }
 
@@ -39,6 +42,7 @@ class XmlValuedTest {
 
     @Test
     void lookupIsCaseSensitiveLikeXsdEnumeration() {
+        // у XSD перелік чутливий до регістру, тому "Caramel" - не те саме, що "caramel"
         assertThrows(IllegalArgumentException.class, () -> XmlValued.fromXml(Kind.class, "Caramel"));
     }
 }

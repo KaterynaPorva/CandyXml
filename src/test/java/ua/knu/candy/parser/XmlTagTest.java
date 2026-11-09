@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Тести переліку тегів XmlTag
 class XmlTagTest {
 
     @ParameterizedTest
@@ -20,6 +21,7 @@ class XmlTagTest {
 
     @Test
     void containerElementsAreNotLeaves() {
+        // елементи, які містять інші елементи
         assertFalse(XmlTag.CANDIES.isLeaf());
         assertFalse(XmlTag.CANDY.isLeaf());
         assertFalse(XmlTag.TYPE.isLeaf());
@@ -29,6 +31,7 @@ class XmlTagTest {
 
     @Test
     void textElementsAreLeaves() {
+        // елементи з текстом усередині
         assertTrue(XmlTag.NAME.isLeaf());
         assertTrue(XmlTag.ENERGY.isLeaf());
         assertTrue(XmlTag.CARBOHYDRATES.isLeaf());

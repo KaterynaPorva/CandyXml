@@ -9,7 +9,11 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 import java.util.List;
 
-/** SAX: push parser - the parser calls our handler for every event. */
+// SAX (Simple API for XML) - "push"-парсер.
+// Читає документ потоково зверху вниз і САМ викликає наші методи-обробники
+// (startElement, characters, endElement) для кожної події. Документ у пам'ять
+// цілком не завантажується, тому підходить для великих файлів.
+// Мінус: не можна повернутися назад, стан треба тримати самим (це робить CandyEventHandler).
 public final class SaxCandyParser extends AbstractCandyParser {
 
     public SaxCandyParser() {
@@ -19,15 +23,15 @@ public final class SaxCandyParser extends AbstractCandyParser {
     @Override
     protected List<Candy> doParse(InputStream in) throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
+        factory.setNamespaceAware(true);   // щоб localName був без префікса простору імен
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
         Handler handler = new Handler();
-        factory.newSAXParser().parse(in, handler);
+        factory.newSAXParser().parse(in, handler);   // тут парсер сам викликає handler
         return handler.events.result();
     }
 
-    /** Adapts SAX callbacks to the shared {@link CandyEventHandler}. */
+    // Обробник SAX: лише пересилає події у спільний CandyEventHandler
     private static final class Handler extends DefaultHandler {
 
         private final CandyEventHandler events = new CandyEventHandler();

@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Тести CandyBuilder: збирає правильний об'єкт і не дає зібрати неповний
 class CandyBuilderTest {
 
+    // Builder з усіма полями першої цукерки
     private static CandyBuilder completeBuilder() {
         return new CandyBuilder()
                 .id("c1")
@@ -42,6 +44,7 @@ class CandyBuilderTest {
 
     @Test
     void filledDefaultsToFalse() {
+        // filled не викликали - має бути false, як default у XSD
         Candy candy = new CandyBuilder()
                 .id("c9").name("x").energy(1).kind(Kind.CARAMEL)
                 .water(0).sugar(0).fructose(0).vanillin(0)
@@ -53,6 +56,7 @@ class CandyBuilderTest {
 
     @Test
     void missingRequiredFieldIsReported() {
+        // у повідомленні має бути назва поля, якого не вистачає
         IllegalStateException e = assertThrows(IllegalStateException.class,
                 () -> completeBuilder().production(null).build());
         assertTrue(e.getMessage().contains("Production"));

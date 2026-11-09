@@ -1,6 +1,7 @@
 package ua.knu.candy.model;
 
-/** Kind of chocolate used in a chocolate candy. Mirrors {@code ChocolateKindType} in the XSD. */
+// Вид шоколаду для шоколадних цукерок: чорний, молочний, білий.
+// Відповідає переліку ChocolateKindType у XSD (елемент ChocolateType).
 public enum ChocolateKind implements XmlValued {
     DARK("dark"),
     MILK("milk"),
