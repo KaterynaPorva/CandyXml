@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://knu.ua/candy"
+           targetNamespace="http://knu.ua/candy"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+    <!-- ====================== Simple types ====================== -->
+
+    <!-- ID type with a pattern: c1, c2, ... Uniqueness is guaranteed by xs:ID -->
+    <xs:simpleType name="CandyIdType">
+        <xs:restriction base="xs:ID">
+            <xs:pattern value="c[0-9]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="NonEmptyStringType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Energy in kcal per 100 g; boundary values -->
+    <xs:simpleType name="EnergyType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="900"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Enumeration of candy kinds -->
+    <xs:simpleType name="KindType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="caramel"/>
+            <xs:enumeration value="toffee"/>
+            <xs:enumeration value="chocolate"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Enumeration of chocolate kinds -->
+    <xs:simpleType name="ChocolateKindType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="dark"/>
+            <xs:enumeration value="milk"/>
+            <xs:enumeration value="white"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Milligrams per 100 g -->
+    <xs:simpleType name="MilligramsType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100000"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Grams per 100 g, two decimals -->
+    <xs:simpleType name="GramsType">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+            <xs:fractionDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- ====================== Complex types ====================== -->
+
+    <!-- Type: kind of candy + whether it has a filling -->
+    <xs:complexType name="TypeType">
+        <xs:attribute name="kind" type="KindType" use="required"/>
+        <xs:attribute name="filled" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="IngredientsType">
+        <xs:sequence>
+            <xs:element name="Water" type="MilligramsType"/>
+            <xs:element name="Sugar" type="MilligramsType"/>
+            <xs:element name="Fructose" type="MilligramsType"/>
+            <xs:element name="ChocolateType" type="ChocolateKindType" minOccurs="0"/>
+            <xs:element name="Vanillin" type="MilligramsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ValueType">
+        <xs:sequence>
+            <xs:element name="Proteins" type="GramsType"/>
+            <xs:element name="Fats" type="GramsType"/>
+            <xs:element name="Carbohydrates" type="GramsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CandyType">
+        <xs:sequence>
+            <xs:element name="Name" type="NonEmptyStringType"/>
+            <xs:element name="Energy" type="EnergyType"/>
+            <xs:element name="Type" type="TypeType"/>
+            <xs:element name="Ingredients" type="IngredientsType"/>
+            <xs:element name="Value" type="ValueType"/>
+            <xs:element name="Production" type="NonEmptyStringType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="CandyIdType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="CandiesType">
+        <xs:sequence>
+            <xs:element name="Candy" type="CandyType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ====================== Root element ====================== -->
+    <xs:element name="Candies" type="CandiesType"/>
+
+</xs:schema>
