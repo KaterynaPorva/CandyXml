@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 // Єдине місце, де XML-тег перетворюється на поле CandyBuilder.
 // Наприклад: тег ENERGY з текстом "520" -> builder.energy(520).
-// Цим класом користуються всі три парсери (SAX, DOM, StAX), тому правило
+// Його викликає спільний CandyEventHandler, через який працюють усі три парсери, тому правило
 // "який тег куди кладемо" написане один раз, а не тричі.
 final class CandyFieldMapper {
 
