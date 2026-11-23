@@ -26,7 +26,7 @@ import java.util.List;
 //   3. сортування через Comparator
 //   4. XSL-перетворення у згрупований документ
 //
-// Запуск:  java -jar candy-xml.jar [sax|dom|stax] [name|energy|production|sugar_desc] [тека для результату]
+// Запуск:  mvn exec:java "-Dexec.args=dom energy"   (аргументи: [sax|dom|stax] [name|energy|production|sugar_desc] [тека для результату])
 // Усі аргументи необов'язкові.
 public final class CandyApp {
 

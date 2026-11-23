@@ -55,7 +55,7 @@ Java 21 + Maven. Документ `candies.xml` описує цукерки, с�
 
 ```bash
 mvn clean package
-java -jar target/candy-xml-1.0.0.jar sax energy
+mvn exec:java "-Dexec.args=sax energy"
 ```
 
 Аргументи (усі необов'язкові):
